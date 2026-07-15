@@ -1,0 +1,58 @@
+* {
+    font-family: "Inter", sans-serif;
+}
+
+.body {
+    height: 100%;
+    margin: 0;
+    flex-basis: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.profileImg {
+    width: 5rem;
+    height: 5rem;
+    margin-bottom: 1rem;
+}
+
+.loginForm {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.loginForm div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.loginForm input {
+    margin-bottom: 1rem;
+    border: 1px solid gray;
+    border-radius: 8px;
+    padding: .5rem .5rem;
+}
+
+.clearButton {
+    border: none;
+    background-color: transparent;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.loginForm .error {
+    border: 1px solid red;
+    margin-bottom: 0;
+}
+
+.errorMessage {
+    color: red;
+    font-size: .6rem;
+    margin: 0 0 1rem 0;
+}
