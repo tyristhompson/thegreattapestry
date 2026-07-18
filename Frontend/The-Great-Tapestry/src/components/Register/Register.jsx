@@ -1,13 +1,13 @@
-import styles from "./Login.module.css";
+import styles from "../Login/Login.module.css";
 import { useNavigate } from "react-router";
 import axios from "axios";
-import Form from "./Form";
+import Form from "../Login/Form";
 
-function Login() {
+function Register() {
     const navigate = useNavigate();
     
-    function findUser(username, password) {
-        console.log("sending api request to check user credentials...", username, password);
+    function createUser(username, email, password) {
+        console.log("creating new user...", username, email, password);
     }
 
 
@@ -16,10 +16,10 @@ function Login() {
             <title>Login</title>
             <div className={styles.body}>
                 <img className={styles.profileImg} src="./images/profile-svgrepo-com.svg" alt="" />
-                <Form findUser={findUser} type="login"/>
+                <Form createUser={createUser} type="register"/>
             </div>
         </>
     )
 };
 
-export default Login;
+export default Register;
