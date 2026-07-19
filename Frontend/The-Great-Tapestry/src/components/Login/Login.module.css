@@ -56,3 +56,11 @@
     font-size: .6rem;
     margin: 0 0 1rem 0;
 }
+
+.subText {
+    font-size: .8rem;
+}
+
+.subText a {
+    text-decoration: underline;
+}

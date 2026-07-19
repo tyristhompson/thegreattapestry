@@ -17,7 +17,7 @@ function Password(props) {
     }
 
     function checkErrors(value) {
-        const validLength = value.trim().length >= 9 && value.trim().length <= 25;
+        const validLength = value.trim().length >= 6 && value.trim().length <= 25;
         const hasBannedChar = bannedChar.find(char => value.includes(char));
 
         if (validLength) {

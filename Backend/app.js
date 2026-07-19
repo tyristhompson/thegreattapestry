@@ -1,5 +1,6 @@
 import express from "express";
 import axios from "axios";
+import cors from "cors";
 import bodyParser from "body-parser";
 import PG from "pg";
 import env from "dotenv";
@@ -23,21 +24,29 @@ const db = new PG.Client({
 db.connect();
 
 //middleware
+app.use(express.json());
+app.use(cors({
+    origin: process.env.ORIGIN,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+}));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 //routes
 app.post("/login", async (req, res) => {
-    if (!req.body?.userName || !req.body?.password) {
-        res.status(400).send("Bad Request");
+    if (!req.body?.username || !req.body?.password) {
+        console.log(req.headers);
+        console.log(req.body);
+        res.status(400).send({ error: "Bad Request" });
     } else {
         const loginInfo = {
-            userName: req.body.userName.trim(),
+            username: req.body.username.trim(),
             password: req.body.password.trim()
         };
 
         try {
-            const result = await db.query("SELECT * FROM users WHERE username = $1", [loginInfo.userName]);
+            const result = await db.query("SELECT * FROM users WHERE username = $1", [loginInfo.username]);
 
             if (result.rows.length > 0) {
                 const user = result.rows[0];
@@ -45,17 +54,18 @@ app.post("/login", async (req, res) => {
 
                 bcrypt.compare(loginInfo.password, hashedPassword, async (error, result) => {
                     if (error) {
+                        res.status(401).send({ error: "Incorrect Password" });
                         console.log("Error comparing passwords", error);
                     } else {
                         if (result) {
-                            res.status(200).send({ userName: loginInfo.userName });
+                            res.status(200).send({ user: {username: user.username, id: user.id, email: user.email} });
                         } else {
-                            res.status(401).send("Incorrect Password");
+                            res.status(401).send({ error: "Incorrect Password" });
                         }
                     }
                 })
             } else {
-                res.send("User not found");
+                res.status(401).send({ error: "User not found" });
             }
         } catch (error) {
             console.log(error);

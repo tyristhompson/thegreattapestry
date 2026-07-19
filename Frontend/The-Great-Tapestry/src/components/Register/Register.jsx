@@ -17,6 +17,7 @@ function Register() {
             <div className={styles.body}>
                 <img className={styles.profileImg} src="./images/profile-svgrepo-com.svg" alt="" />
                 <Form createUser={createUser} type="register"/>
+                <p className={styles.subText}>Already have an account? <a href="/login">Login.</a></p>
             </div>
         </>
     )

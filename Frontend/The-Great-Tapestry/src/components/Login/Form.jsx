@@ -69,7 +69,7 @@ function Form(props) {
                 placeholder="ArtIsCool101"
             />
 
-            <button className={styles.clearButton} type="submit">Login</button>
+            <button className={styles.clearButton} type="submit">{props.type === "login" ? "Login" : "Register"}</button>
         </form>
     )
 }
