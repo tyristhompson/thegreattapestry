@@ -1,23 +1,45 @@
 import styles from "../Login/Login.module.css";
-import { useNavigate } from "react-router";
+import { useState } from "react";
 import axios from "axios";
 import Form from "../Login/Form";
+import { errorMessages } from "../Utlities";
 
 function Register() {
-    const navigate = useNavigate();
-    
-    function createUser(username, email, password) {
-        console.log("creating new user...", username, email, password);
+    const [fetchError, setFetchError] = useState(false);
+    const [fetchErrorMessage, setFetchErrorMessage] = useState("")
+
+    async function createUser(username, email, password) {
+        try {
+            const response = await axios.post("http://localhost:3000/register", {
+                username: username,
+                email: email,
+                password: password,
+            });
+
+            const user = response.data.user;
+            console.log("response from api:", user);
+
+        } catch (error) {
+            const responseError = error.response.data.error;
+            setFetchError(true);
+            if (error.status === 500) {
+                setFetchErrorMessage(errorMessages[5]);
+            } else {
+                setFetchErrorMessage(responseError);
+
+            }
+        }
     }
 
 
     return (
         <>
-            <title>Login</title>
+            <title>Register</title>
             <div className={styles.body}>
                 <img className={styles.profileImg} src="./images/profile-svgrepo-com.svg" alt="" />
-                <Form createUser={createUser} type="register"/>
+                <Form createUser={createUser} type="register" />
                 <p className={styles.subText}>Already have an account? <a href="/login">Login.</a></p>
+                {fetchError && <p className={styles.errorMessage}>{fetchErrorMessage}</p>}
             </div>
         </>
     )

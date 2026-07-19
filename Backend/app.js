@@ -38,7 +38,7 @@ app.post("/login", async (req, res) => {
     if (!req.body?.username || !req.body?.password) {
         console.log(req.headers);
         console.log(req.body);
-        res.status(400).send({ error: "Bad Request" });
+        return res.status(400).send({ error: "Bad Request" });
     } else {
         const loginInfo = {
             username: req.body.username.trim(),
@@ -58,14 +58,14 @@ app.post("/login", async (req, res) => {
                         console.log("Error comparing passwords", error);
                     } else {
                         if (result) {
-                            res.status(200).send({ user: {username: user.username, id: user.id, email: user.email} });
+                            return res.status(200).send({ user: { username: user.username, id: user.id, email: user.email } });
                         } else {
-                            res.status(401).send({ error: "Incorrect Password" });
+                            return res.status(401).send({ error: "Incorrect Password" });
                         }
                     }
                 })
             } else {
-                res.status(401).send({ error: "User not found" });
+                return res.status(401).send({ error: "User not found" });
             }
         } catch (error) {
             console.log(error);
@@ -75,11 +75,11 @@ app.post("/login", async (req, res) => {
 });
 
 app.post("/register", async (req, res) => {
-    if (!req.body?.userName || !req.body?.email || !req.body?.password) {
-        res.status(400).send("Bad Request");
+    if (!req.body?.username || !req.body?.email || !req.body?.password) {
+        return res.status(400).send({error: "Bad Request"});
     }
     const userInfo = {
-        userName: req.body.userName.trim(),
+        username: req.body.username.trim(),
         email: req.body.email.trim(),
         password: req.body.password.trim()
     };
@@ -88,25 +88,25 @@ app.post("/register", async (req, res) => {
         const checkUserEmail = await db.query("SELECT email FROM users WHERE email = $1", [userInfo.email]);
 
         if (checkUserEmail.rows.length > 0) {
-            res.send("This email is already in use. Please try logging in.");
+            return res.status(400).send({error: "This email is already in use. Please try logging in."});
         } else {
-            bcrypt.hash(userInfo.password, salt, async (error, hash) => {
+            bcrypt.hash(userInfo.password, Number(salt), async (error, hash) => {
                 if (error) {
-                    console.log("Error hashing password", error);
+                    return res.status(500).send({ error: "Error hashing password" });
                 }
                 try {
-                    await db.query("INSERT INTO users (username, email, password) VALUES ($1, $2, $3)",
-                        [userInfo.userName, userInfo.email, hash]
+                    const response = await db.query("INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING username, email, id",
+                        [userInfo.username, userInfo.email, hash]
                     );
-                    res.redirect("/login");
+                    return res.status(200).send({ user: response.rows[0] });
                 } catch (error) {
-                    res.status(400).send("This username is taken.", error);
+                    return res.status(400).send({ error: "This username is taken." });
                 }
             });
         };
 
     } catch (error) {
-        res.status(500).send("Error adding user", error);
+        return res.status(500).send({ error: "Error adding user" });
     }
 })
 
