@@ -46,7 +46,9 @@ app.post("/login", async (req, res) => {
         };
 
         try {
-            const result = await db.query("SELECT * FROM users WHERE username = $1", [loginInfo.username]);
+            const query = "SELECT * FROM users WHERE username = $1";
+            const values = [loginInfo.username];
+            const result = await db.query(query, values);
 
             if (result.rows.length > 0) {
                 const user = result.rows[0];
@@ -54,18 +56,18 @@ app.post("/login", async (req, res) => {
 
                 bcrypt.compare(loginInfo.password, hashedPassword, async (error, result) => {
                     if (error) {
-                        res.status(401).send({ error: "Incorrect Password" });
+                        res.status(401).send({ error: "Username or Password is incorrect" });
                         console.log("Error comparing passwords", error);
                     } else {
                         if (result) {
                             return res.status(200).send({ user: { username: user.username, id: user.id, email: user.email } });
                         } else {
-                            return res.status(401).send({ error: "Incorrect Password" });
+                            return res.status(401).send({ error: "Username or Password is incorrect" });
                         }
                     }
                 })
             } else {
-                return res.status(401).send({ error: "User not found" });
+                return res.status(401).send({ error: "Username or Password is incorrect" });
             }
         } catch (error) {
             console.log(error);
@@ -76,7 +78,7 @@ app.post("/login", async (req, res) => {
 
 app.post("/register", async (req, res) => {
     if (!req.body?.username || !req.body?.email || !req.body?.password) {
-        return res.status(400).send({error: "Bad Request"});
+        return res.status(400).send({ error: "Bad Request" });
     }
     const userInfo = {
         username: req.body.username.trim(),
@@ -85,19 +87,21 @@ app.post("/register", async (req, res) => {
     };
 
     try {
-        const checkUserEmail = await db.query("SELECT email FROM users WHERE email = $1", [userInfo.email]);
+        const query = "SELECT email FROM users WHERE email = $1";
+        const values = [userInfo.email];
+        const checkUserEmail = await db.query(query, values);
 
         if (checkUserEmail.rows.length > 0) {
-            return res.status(400).send({error: "This email is already in use. Please try logging in."});
+            return res.status(400).send({ error: "This email is already in use. Please try logging in." });
         } else {
             bcrypt.hash(userInfo.password, Number(salt), async (error, hash) => {
                 if (error) {
                     return res.status(500).send({ error: "Error hashing password" });
                 }
                 try {
-                    const response = await db.query("INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING username, email, id",
-                        [userInfo.username, userInfo.email, hash]
-                    );
+                    const query = "INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING username, email, id";
+                    const values = [userInfo.username, userInfo.email, hash];
+                    const response = await db.query(query, values);
                     return res.status(200).send({ user: response.rows[0] });
                 } catch (error) {
                     return res.status(400).send({ error: "This username is taken." });
@@ -111,8 +115,6 @@ app.post("/register", async (req, res) => {
 })
 
 app.get("/profile", async (req, res) => {
-    const user = sessionStorage.getItem("userName");
-
     if (req.query.sort) {
         try {
             const allowedColumns = ['title', 'rating', 'date_read'];
@@ -121,17 +123,18 @@ app.get("/profile", async (req, res) => {
             const validatedColumn = allowedColumns.includes(sort) ? sort : 'id';
 
             const response = await db.query(`SELECT * FROM library ORDER BY ${validatedColumn};`);
-            res.render("profile.ejs", { userName: user, library: response.rows });
+            return res.status(200).send({ library: response.rows });
         } catch (error) {
-            res.send(error);
+            return res.status(500).send({ error: "Couldn't retrieve library" });
         }
     }
     else {
         try {
             const response = await db.query("SELECT * FROM library");
-            res.render("profile.ejs", { userName: user, library: response.rows });
+            return res.status(200).send({ library: response.rows });
         } catch (error) {
-            res.send(error);
+            return res.status(500).send({ error: "Couldn't retrieve library" });
+
         }
     }
 });

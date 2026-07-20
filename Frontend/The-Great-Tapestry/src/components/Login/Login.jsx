@@ -4,13 +4,12 @@ import { errorMessages } from "../Utlities";
 import axios from "axios";
 import Form from "./Form";
 
-function Login() {
+function Login(props) {
     const [fetchError, setFetchError] = useState(false);
     const [fetchErrorMessage, setFetchErrorMessage] = useState("")
 
 
     async function findUser(username, password) {
-        // console.log("sending api request to check user credentials...", username, password);
         try {
             const response = await axios.post("http://localhost:3000/login", {
                 username: username,
@@ -18,7 +17,7 @@ function Login() {
             });
 
             const user = response.data.user;
-            console.log("response from api:", user);
+            props.loginUser(user);
 
         } catch (error) {
             const responseError = error.response.data.error;
@@ -39,7 +38,7 @@ function Login() {
             <div className={styles.body}>
                 <img className={styles.profileImg} src="./images/profile-svgrepo-com.svg" alt="" />
                 <Form findUser={findUser} type="login" />
-                <p className={styles.subText}>Don't have an account? <a href="/register">Register here.</a></p>
+                <p className={styles.subText}>{"Don't have an account?"} <a href="/register">Register here.</a></p>
                 {fetchError && <p className={styles.errorMessage}>{fetchErrorMessage}</p>}
             </div>
         </>

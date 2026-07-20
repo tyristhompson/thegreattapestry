@@ -4,7 +4,7 @@ import axios from "axios";
 import Form from "../Login/Form";
 import { errorMessages } from "../Utlities";
 
-function Register() {
+function Register(props) {
     const [fetchError, setFetchError] = useState(false);
     const [fetchErrorMessage, setFetchErrorMessage] = useState("")
 
@@ -17,8 +17,7 @@ function Register() {
             });
 
             const user = response.data.user;
-            console.log("response from api:", user);
-
+            props.loginUser(user);
         } catch (error) {
             const responseError = error.response.data.error;
             setFetchError(true);
