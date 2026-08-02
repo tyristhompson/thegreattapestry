@@ -47,6 +47,14 @@ authRouter.post("/register", async (req, res) => {
 
     } catch (err) {
         return res.status(500).json({ error: err, message: "Error adding user" });
+    } 
+});
+
+authRouter.get("/me", async(req, res) => {
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Please log in."});
+    } else {
+        return res.status(200).json({user: req.user});
     }
 })
 

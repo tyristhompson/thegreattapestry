@@ -1,10 +1,12 @@
 import styles from "../Login/Login.module.css";
-import { useState } from "react";
+import { AuthContext } from "../../contexts/authContext";
+import { useState, useContext } from "react";
 import axios from "axios";
 import Form from "../Login/Form";
 import { errorMessages } from "../Utlities";
 
-function Register(props) {
+function Register() {
+    const [ , setAuthUser] = useContext(AuthContext);
     const [fetchError, setFetchError] = useState(false);
     const [fetchErrorMessage, setFetchErrorMessage] = useState("")
 
@@ -17,7 +19,7 @@ function Register(props) {
             });
 
             const user = response.data.user;
-            props.loginUser(user);
+            setAuthUser(user);
         } catch (error) {
             const responseError = error.response.data.error;
             setFetchError(true);

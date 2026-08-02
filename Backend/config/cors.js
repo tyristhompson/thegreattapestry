@@ -1,4 +1,6 @@
 import cors from "cors";
+import env from "dotenv";
+env.config();
 
 const configCors = cors({
     origin: process.env.ORIGIN,
