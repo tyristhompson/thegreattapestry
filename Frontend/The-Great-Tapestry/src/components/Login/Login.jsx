@@ -1,23 +1,40 @@
 import styles from "./Login.module.css";
-import { useState } from "react";
-import { errorMessages } from "../Utlities";
+import { AuthContext } from "../../contexts/authContext";
+import { useState, useContext, useEffect } from "react";
+import { errorMessages, getUser } from "../Utlities";
 import axios from "axios";
 import Form from "./Form";
+import { useNavigate } from "react-router";
 
-function Login(props) {
+function Login() {
+    const navigate = useNavigate();
+    const { setAuthUser, setLoggedIn } = useContext(AuthContext);
     const [fetchError, setFetchError] = useState(false);
-    const [fetchErrorMessage, setFetchErrorMessage] = useState("")
+    const [fetchErrorMessage, setFetchErrorMessage] = useState("");
+
+    useEffect(() => {
+        getUser().then((user) => {
+            if (user) {
+                setAuthUser(user);
+                navigate("/profile")
+            }
+        });
+    }, []);
 
 
     async function findUser(username, password) {
         try {
-            const response = await axios.post("http://localhost:3000/login", {
+            const response = await axios.post("http://localhost:3000/user/login", {
                 username: username,
                 password: password
+            }, {
+                withCredentials: true,
             });
 
             const user = response.data.user;
-            props.loginUser(user);
+            setAuthUser(user);
+            setLoggedIn(true);
+            // console.log(user);
 
         } catch (error) {
             const responseError = error.response.data.error;
