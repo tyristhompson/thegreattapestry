@@ -1,30 +1,44 @@
-import { Routes, Route, useNavigate } from 'react-router';
-import { useState } from 'react';
+import { Routes, Route, useNavigate} from 'react-router';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import './App.css';
+import { AuthContext } from '../contexts/authContext';
 import HomePage from './Home/Homepage';
 import Login from './Login/Login';
 import Register from './Register/Register';
 import Profile from './Profile/Profile';
 
-function App() {
-  const navigate = useNavigate();
-  const [user, setUser] = useState({});
 
-  function loginUser(user) {
-    setUser(user);
-    navigate("/profile");
-  }
+function App() {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [authUser, setAuthUser] = useState(undefined);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    /* if(authUser) {
+      async () => {
+      const response = await axios.get("http://localhost:3000/user/me");
+      setAuthUser(response.data.user);
+      navigate("/profile");
+    }
+    } */
+   if(loggedIn) navigate("/profile");
+  }, [loggedIn]);
+  
 
   return (
     <>
-      <Routes>
-        <Route index element={<HomePage />} />
-        <Route path="/login" element={<Login loginUser={loginUser}/>} />
-        <Route path="/register" element={<Register loginUser={loginUser}/>} />
-        <Route path="/profile" element={<Profile user={user}/>} />
-      </Routes>
+      <AuthContext.Provider value={{authUser, setAuthUser, loggedIn, setLoggedIn}}>
+        <Routes>
+          <Route index element={<HomePage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
+      </AuthContext.Provider>
     </>
   )
 }
 
-export default App
+export default App;
+
