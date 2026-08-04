@@ -5,20 +5,23 @@ const bookRouter = Router();
 
 
 bookRouter.get("/library", async (req, res) => {
-        const response = await bookModel.getUserBooks();
-        res.status(200).json({library: response});
+    if(!req.isAuthenticated()) {
+        return res.status(401).json({error: "please log in"})
+    }
+    const response = await bookModel.getUserBooks(req.user.id);
+    return res.status(200).json({ library: response });
 });
 
 bookRouter.post("/search", async (req, res) => {
     if (!req.body?.search) {
-        res.status(400).json("Bad Request");
+        return res.status(400).json("Bad Request");
     } else {
         const result = await bookModel.fetchTitle(req.body.search);
-        if(!result) {
-            res.status(500).json({message: "Could not fetch searched title at this time."});
+        if (!result) {
+            return res.status(500).json({ message: "Could not fetch searched title at this time." });
         } else {
-            res.status(200).json({books: result});
-        }   
+            return res.status(200).json({ books: result });
+        }
     }
 });
 
@@ -28,22 +31,28 @@ bookRouter.get(`/info/:key`, async (req, res) => {
     try {
         const bookResponse = await bookModel.getBookInfo();
 
-        res.status(200).json({ book: bookResponse });
+        return res.status(200).json({ book: bookResponse });
     }
     catch (error) {
-        res.status(500).json({ error });
+        return res.status(500).json({ error });
     };
 
 });
 
 bookRouter.post('/add', async (req, res) => {
+    if(!req.isAuthenticated()) {
+        return res.status(401).json({error: "please log in"})
+    }
+
     const title = req.body?.title?.trim();
+    const key = req.body?.key?.trim();
     const description = req.body?.description?.trim();
     const cover = req.body?.cover?.trim();
     try {
-        await bookModel.addToLibrary(title, description, cover);
+        const response = await bookModel.addToLibrary(title, key, req.user.id, cover, description);
+        return res.status(200).json({ added: response });
     } catch (error) {
-        res.status(400).json(error)
+        return res.status(400).json(error)
     }
 
 

@@ -8,8 +8,8 @@ export default {
         const result = await pool.query("SELECT * FROM library ORDER BY $1;", [validatedColumn]);
         return result.rows;
     },
-    getUserBooks: async () => {
-        const result = await pool.query("SELECT * FROM library");
+    getUserBooks: async (userID) => {
+        const result = await pool.query("SELECT * FROM library_test WHERE user_id = $1", [userID]);
         return result.rows;
     },
     fetchTitle: async (title) => {
@@ -50,11 +50,13 @@ export default {
             return undefined
         }
     },
-    addToLibrary: async (title, description, cover) => {
+    addToLibrary: async (title, key, userID, cover, description) => {
         try {
-            await pool.query("INSERT INTO library (title, description, cover)  VALUES ($1, $2, $3)",
-                [title, description, cover]
-            )
+          const response =  await pool.query("INSERT INTO library_test (title, book_key, user_id, cover, description)  VALUES ($1, $2, $3, $4, $5) RETURNING title, user_id",
+                [title, key, userID, cover, description]
+            );
+
+        return response.rows[0];
         } catch (err) {
             console.log(err);
             const errorMessage = "error adding book to library";
