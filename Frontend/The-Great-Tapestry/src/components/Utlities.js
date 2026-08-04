@@ -21,5 +21,17 @@ const getUser = async () => {
     }
 };
 
+const getLibrary = async () => {
+    try {
+        const response = await axios.get("http://localhost:3000/books/library", {
+            withCredentials: true,
+        });
+        return response.data.library;
+    } catch (err) {
+        console.log("error fetching library:", err)
+        return undefined;
+    }
+};
 
-export { bannedChar, errorMessages, getUser };
+
+export { bannedChar, errorMessages, getUser, getLibrary };

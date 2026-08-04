@@ -1,11 +1,15 @@
 import { Router } from "express";
-import axios from "axios";
-import bookModel from "../models/bookModel";
+import bookModel from "../models/bookModel.js";
 
 const bookRouter = Router();
 
 
-bookRouter.post("/books", async (req, res) => {
+bookRouter.get("/library", async (req, res) => {
+        const response = await bookModel.getUserBooks();
+        res.status(200).json({library: response});
+});
+
+bookRouter.post("/search", async (req, res) => {
     if (!req.body?.search) {
         res.status(400).json("Bad Request");
     } else {
@@ -22,10 +26,9 @@ bookRouter.post("/books", async (req, res) => {
 bookRouter.get(`/info/:key`, async (req, res) => {
     console.log(req.params.key);
     try {
-        const bookResponse = await axios.get(`https://openlibrary.org/works/${req.params.key}.json`);
-        const bookResult = bookResponse.data;
+        const bookResponse = await bookModel.getBookInfo();
 
-        res.status(200).json({ book: bookResult });
+        res.status(200).json({ book: bookResponse });
     }
     catch (error) {
         res.status(500).json({ error });
@@ -33,30 +36,14 @@ bookRouter.get(`/info/:key`, async (req, res) => {
 
 });
 
-bookRouter.get('/notes/:id', async (req, res) => {
-    const response = await db.query("SELECT title FROM library WHERE id = $1", [+req.params.id]);
-    res.json(`Write a review about ${response.rows[0].title}`);
-});
-
 bookRouter.post('/add', async (req, res) => {
-    if (req.body.back) {
-        res.redirect('/search');
-    }
-
-    const bookInfo = {
-        title: req.body.title.trim(),
-        description: req.body.description.trim(),
-        cover: req.body.cover.trim()
-    };
+    const title = req.body?.title?.trim();
+    const description = req.body?.description?.trim();
+    const cover = req.body?.cover?.trim();
     try {
-        await db.query("INSERT INTO library (title, description, cover)  VALUES ($1, $2, $3)",
-            [bookInfo.title, bookInfo.description, bookInfo.cover]
-        );
-
-        res.status(200).redirect('/profile');
-
+        await bookModel.addToLibrary(title, description, cover);
     } catch (error) {
-        res.json(error)
+        res.status(400).json(error)
     }
 
 

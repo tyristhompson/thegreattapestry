@@ -6,6 +6,7 @@ import passport from "passport";
 import configPassport from "./config/passport.js";
 import createSession from "./config/session.js";
 import authRouter from "./routes/authRouter.js";
+import bookRouter from "./routes/bookRouter.js";
 
 //config
 const app = express();
@@ -24,6 +25,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Auth routes
 app.use("/user", authRouter);
+
+//Book routes
+app.use("/books", bookRouter);
 
 
 

@@ -40,5 +40,25 @@ export default {
                 );
             }
         }
+    },
+    getBookInfo: async (key) => {
+        try {
+            const result = await axios.get(`https://openlibrary.org/works/${key}.json`);
+            return result.data;
+        } catch (err) {
+            console.log(err);
+            return undefined
+        }
+    },
+    addToLibrary: async (title, description, cover) => {
+        try {
+            await pool.query("INSERT INTO library (title, description, cover)  VALUES ($1, $2, $3)",
+                [title, description, cover]
+            )
+        } catch (err) {
+            console.log(err);
+            const errorMessage = "error adding book to library";
+            return errorMessage;
+        }
     }
 }
