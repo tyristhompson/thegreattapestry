@@ -16,6 +16,7 @@ function Profile() {
             });
         }
     }, []);
+    
     return (
         <>
             <div className={styles.container}>
