@@ -1,0 +1,81 @@
+.container {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10rem;
+}
+
+h2 {
+    font-weight: 500;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1.2rem;
+}
+
+.directory {
+    display: flex;
+}
+
+.searchForm {
+    display: flex;
+    justify-content: center;
+    margin-top: 12rem;
+    border-bottom: 1px solid black;
+    width: 50%;
+
+    align-self: center;
+
+    margin-bottom: 2rem;
+}
+
+.clearButton {
+    border: none;
+    background-color: transparent;
+    font-size: 1.2rem;
+}
+
+a {
+    color: inherit;           
+    text-decoration: none;
+}
+
+.searchImg {
+    width: 2rem;
+    height: 2rem;
+}
+
+.searchBar {
+    width: 40%;
+    border: none;
+
+    text-align: center;
+    font-size: 1.4rem;
+}
+
+.searchBar:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.grid-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.searchResultsGrid {
+    display: grid;
+    grid-template-columns: 20rem 20rem 20rem 20rem; 
+    max-width: fit-content;
+    gap: 2rem;
+}
+
+.bookCover {
+    width: 20rem;
+    height: 28rem;
+    border-radius: 1rem;
+}
