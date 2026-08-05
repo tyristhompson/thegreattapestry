@@ -47,20 +47,20 @@ authRouter.post("/register", async (req, res) => {
 
     } catch (err) {
         return res.status(500).json({ error: err, message: "Error adding user" });
-    } 
+    }
 });
 
-authRouter.get("/me", async(req, res) => {
+authRouter.get("/me", async (req, res) => {
     if (!req.isAuthenticated()) {
-        return res.status(401).json({ message: "Please log in."});
+        return res.status(401).json({ message: "Please log in." });
     } else {
-        return res.status(200).json({user: req.user});
+        return res.status(200).json({ user: req.user });
     }
 })
 
 authRouter.get("/profile", async (req, res) => {
     if (!req.isAuthenticated()) {
-        return res.status(401).json({ message: "Please log in."});
+        return res.status(401).json({ message: "Please log in." });
     }
 
     if (req.query.sort) {
@@ -76,7 +76,7 @@ authRouter.get("/profile", async (req, res) => {
             const Library = await bookModel.getUserBooks();
             return res.status(200).json({ library: Library });
         } catch (err) {
-            return res.status(500).json({ error: err, message:  "Couldn't retrieve library" });
+            return res.status(500).json({ error: err, message: "Couldn't retrieve library" });
 
         }
     }
@@ -87,7 +87,13 @@ authRouter.post('/logout', (req, res) => {
         if (err) {
             console.log(err);
         }
-        res.status(200).json({message: "Logout successful."});
+        req.session.destroy((err) => {
+            if (err) {
+                return res.status(500).json({error: err});
+            }
+            res.clearCookie("connect.sid");
+            return res.status(200).json({ message: "Logout successful." });
+        })
     });
 });
 

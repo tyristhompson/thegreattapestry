@@ -15,6 +15,7 @@ const getUser = async () => {
         const response = await axios.get("http://localhost:3000/user/me", {
             withCredentials: true,
         });
+        console.log(response.data.user)
         return response.data.user;
     } catch (err) {
         return false;
@@ -33,5 +34,21 @@ const getLibrary = async () => {
     }
 };
 
+const logOut = async () => {
+    try {
+        const response = await axios.post("http://localhost:3000/user/logout", {}, {
+            withCredentials: true,
+        });
+        if (response.status === 200) {
+            return true;
+        } else {
+            return false;
+        }
+        
+    } catch (err) {
+        return err;
+    }
+};
 
-export { bannedChar, errorMessages, getUser, getLibrary };
+
+export { bannedChar, errorMessages, getUser, getLibrary, logOut };

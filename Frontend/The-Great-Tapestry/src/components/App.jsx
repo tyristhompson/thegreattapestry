@@ -1,6 +1,5 @@
 import { Routes, Route, useNavigate} from 'react-router';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import './App.css';
 import { AuthContext } from '../contexts/authContext';
 import HomePage from './Home/Homepage';

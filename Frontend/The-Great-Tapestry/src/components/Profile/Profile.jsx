@@ -1,7 +1,7 @@
 import styles from "./Profile.module.css";
 import { AuthContext } from "../../contexts/authContext";
 import { useContext, useEffect, useState } from "react";
-import { getUser, getLibrary } from "../Utlities";
+import { getUser, getLibrary, logOut } from "../Utlities";
 import { useNavigate } from "react-router";
 
 function Profile() {
@@ -24,6 +24,11 @@ function Profile() {
         });
     }, [authUser])
 
+   async function handleLogout() {
+        const logOutSuccessful = await logOut();
+        logOutSuccessful ? navigate("/") : navigate("/profile");
+    }
+
     return (
         <>
             <div className={styles.container}>
@@ -31,7 +36,10 @@ function Profile() {
                     <h2>
                         {authUser ? authUser.username + "'s" : ""} Tapestry
                     </h2>
-                    <button className={styles.clearButton}><a href="/search">Search Catalog</a></button>
+                    <div className={styles.directory}>
+                        <p onClick={handleLogout}>Logout</p>
+                        <button className={styles.clearButton}><a href="/search">Search Catalog</a></button>
+                    </div>
                 </div>
                 {
                     library.length > 0 ?
