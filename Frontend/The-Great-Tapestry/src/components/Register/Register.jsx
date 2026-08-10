@@ -6,7 +6,7 @@ import Form from "../Login/Form";
 import { errorMessages } from "../Utlities";
 
 function Register() {
-    const [ , setAuthUser] = useContext(AuthContext);
+    const { setAuthUser } = useContext(AuthContext);
     const [fetchError, setFetchError] = useState(false);
     const [fetchErrorMessage, setFetchErrorMessage] = useState("")
 
