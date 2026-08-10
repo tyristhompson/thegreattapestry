@@ -50,5 +50,19 @@ const logOut = async () => {
     }
 };
 
+const fetchBookInfo = async (key) => {
+    try {
+        const response = await axios.get(`http://localhost:3000/books/info/${key}`, {
+            withCredentials: true,
+        });
+        
+        return response.data.book;
 
-export { bannedChar, errorMessages, getUser, getLibrary, logOut };
+    }
+    catch (err) {
+        return undefined;
+    }
+};
+
+
+export { bannedChar, errorMessages, getUser, getLibrary, logOut, fetchBookInfo };

@@ -50,7 +50,7 @@ function Profile() {
                                         <img
                                             key={book.id}
                                             className={styles.bookCover}
-                                            src={book.cover}
+                                            src={`https://covers.openlibrary.org/b/id/${book.cover}-L.jpg`}
                                             alt={book.title + "book cover"}
                                         />
                                     )

@@ -27,11 +27,16 @@ bookRouter.post("/search", async (req, res) => {
 
 //Need to finish updating these routes.
 bookRouter.get(`/info/:key`, async (req, res) => {
-    console.log(req.params.key);
     try {
-        const bookResponse = await bookModel.getBookInfo();
+        const bookResponse = await bookModel.getBookInfo(req.params.key);
+        const info = {
+            title: bookResponse.title,
+            description: bookResponse.description,
+            cover: bookResponse.covers[0],
+            key: bookResponse.key
+        };
 
-        return res.status(200).json({ book: bookResponse });
+        return res.status(200).json({ book: info });
     }
     catch (error) {
         return res.status(500).json({ error });
@@ -47,7 +52,7 @@ bookRouter.post('/add', async (req, res) => {
     const title = req.body?.title?.trim();
     const key = req.body?.key?.trim();
     const description = req.body?.description?.trim();
-    const cover = req.body?.cover?.trim();
+    const cover = req.body?.cover;
     try {
         const response = await bookModel.addToLibrary(title, key, req.user.id, cover, description);
         return res.status(200).json({ added: response });

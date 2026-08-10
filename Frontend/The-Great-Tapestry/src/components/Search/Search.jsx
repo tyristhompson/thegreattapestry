@@ -17,12 +17,20 @@ function Search() {
         event.preventDefault();
         try {
             const response = await axios.post("http://localhost:3000/books/search", { search: input });
-            const filteredBooks = response.data.books.filter(book => book.cover_i );
+            const filteredBooks = response.data.books.filter(book => book.cover_i);
             setSearchResults(filteredBooks);
         } catch (err) {
             console.log(err);
         }
     }
+
+    function setBookInfo(bookKey) {
+        const keyLength = bookKey.length;
+        const configuredKey = bookKey.slice(-(keyLength - 7));
+
+        localStorage.setItem("book", JSON.stringify(configuredKey));
+        navigate("/book/info");
+    };
 
     return (
         <>
@@ -45,7 +53,8 @@ function Search() {
                         value={input}
                     />
                     <button className={styles.clearButton} type="submit">
-                        <img className={styles.searchImg} src="./images/search-outline.svg" alt="" />
+                        <img 
+                        className={styles.searchImg} src="./images/search-outline.svg" alt="" />
                     </button>
                 </form>
                 <div className={styles.searchResultsGrid}>
@@ -54,6 +63,7 @@ function Search() {
                             return (
                                 <img
                                     key={book.key}
+                                    onClick={() => {setBookInfo(book.key)}}
                                     className={styles.bookCover}
                                     src={`https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`}
                                     alt={book.title + " " + "book cover"}

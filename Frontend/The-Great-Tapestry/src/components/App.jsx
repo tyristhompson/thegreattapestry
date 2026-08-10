@@ -7,6 +7,7 @@ import Login from './Login/Login';
 import Register from './Register/Register';
 import Profile from './Profile/Profile';
 import Search from './Search/Search';
+import BookInfo from './BookInfo/BookInfo';
 
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/book/info" element={<BookInfo />} />
         </Routes>
       </AuthContext.Provider>
     </>
