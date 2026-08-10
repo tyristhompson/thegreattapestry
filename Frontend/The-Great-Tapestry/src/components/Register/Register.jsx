@@ -4,15 +4,17 @@ import { useState, useContext } from "react";
 import axios from "axios";
 import Form from "../Login/Form";
 import { errorMessages } from "../Utlities";
+import { useNavigate } from "react-router";
 
 function Register() {
-    const [ , setAuthUser] = useContext(AuthContext);
+    const navigate = useNavigate();
+    const { setAuthUser } = useContext(AuthContext);
     const [fetchError, setFetchError] = useState(false);
     const [fetchErrorMessage, setFetchErrorMessage] = useState("")
 
     async function createUser(username, email, password) {
         try {
-            const response = await axios.post("http://localhost:3000/register", {
+            const response = await axios.post("http://localhost:3000/user/register", {
                 username: username,
                 email: email,
                 password: password,
@@ -20,6 +22,7 @@ function Register() {
 
             const user = response.data.user;
             setAuthUser(user);
+            navigate("/login");
         } catch (error) {
             const responseError = error.response.data.error;
             setFetchError(true);
@@ -27,7 +30,6 @@ function Register() {
                 setFetchErrorMessage(errorMessages[5]);
             } else {
                 setFetchErrorMessage(responseError);
-
             }
         }
     }
