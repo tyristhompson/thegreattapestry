@@ -8,6 +8,7 @@ import Register from './Register/Register';
 import Profile from './Profile/Profile';
 import Search from './Search/Search';
 import BookInfo from './BookInfo/BookInfo';
+import Notes from "./Notes/Notes";
 
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/search" element={<Search />} />
           <Route path="/book/info" element={<BookInfo />} />
+          <Route path="/profile/book/notes" element={<Notes />} />
         </Routes>
       </AuthContext.Provider>
     </>

@@ -1,12 +1,13 @@
 import { Router } from "express";
 import bookModel from "../models/bookModel.js";
+import noteModel from "../models/noteModel.js";
 
 const bookRouter = Router();
 
 
 bookRouter.get("/library", async (req, res) => {
-    if(!req.isAuthenticated()) {
-        return res.status(401).json({error: "please log in"})
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ error: "please log in" })
     }
     const response = await bookModel.getUserBooks(req.user.id);
     return res.status(200).json({ library: response });
@@ -45,8 +46,8 @@ bookRouter.get(`/info/:key`, async (req, res) => {
 });
 
 bookRouter.post('/add', async (req, res) => {
-    if(!req.isAuthenticated()) {
-        return res.status(401).json({error: "please log in"})
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ error: "please log in" })
     }
 
     const title = req.body?.title?.trim();
@@ -61,6 +62,24 @@ bookRouter.post('/add', async (req, res) => {
     }
 
 
-})
+});
+
+bookRouter.delete('/delete/:key', async (req, res) => {
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ error: "please log in" })
+    }
+    if (req.params.key) {
+        try {
+            const noteResponse = await noteModel.deleteNote(req.params.key, req.user.id);
+            const bookResponse = await bookModel.deleteFromLibrary(req.params.key, req.user.id);
+            return res.status(200).json({ deleteStatus: {bookResponse, noteResponse} });
+
+        } catch (err) {
+            return res.status(400).json({ error: err });
+        }
+    } else {
+        return res.status(400).send("improper key");
+    }
+});
 
 export default bookRouter;

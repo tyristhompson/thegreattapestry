@@ -44,7 +44,7 @@ const logOut = async () => {
         } else {
             return false;
         }
-        
+
     } catch (err) {
         return err;
     }
@@ -55,7 +55,7 @@ const fetchBookInfo = async (key) => {
         const response = await axios.get(`http://localhost:3000/books/info/${key}`, {
             withCredentials: true,
         });
-        
+
         return response.data.book;
 
     }
@@ -64,5 +64,55 @@ const fetchBookInfo = async (key) => {
     }
 };
 
+const deleteBook = async (key) => {
+    try {
+        const response = await axios.delete(`http://localhost:3000/books/delete/${key}`, {
+            withCredentials: true,
+        });
+        return response;
+    } catch (err) {
+        return err;
+    }
+};
 
-export { bannedChar, errorMessages, getUser, getLibrary, logOut, fetchBookInfo };
+const fetchNote = async (key) => {
+    try {
+        const response = await axios.get(`http://localhost:3000/notes/${key}`, {
+            withCredentials: true,
+        });
+        return response.data.note;
+    } catch (err) {
+        return err;
+    }
+};
+
+const createNote = async (key, note) => {
+    try {
+        const response = await axios.post(`http://localhost:3000/notes/create/${key}`, {
+            note: note,
+        }, {
+            withCredentials: true,
+        });
+
+        return response;
+    } catch (err) {
+        return err;
+    }
+};
+
+const updateNote = async (key, note) => {
+    try {
+        const response = await axios.patch(`http://localhost:3000/notes/update/${key}`, {
+            note: note,
+        }, {
+            withCredentials: true,
+        });
+
+        return response;
+    } catch (err) {
+        return err;
+    }
+}
+
+
+export { bannedChar, errorMessages, getUser, getLibrary, logOut, fetchBookInfo, deleteBook, createNote, fetchNote, updateNote };

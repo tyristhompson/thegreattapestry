@@ -7,6 +7,7 @@ import configPassport from "./config/passport.js";
 import createSession from "./config/session.js";
 import authRouter from "./routes/authRouter.js";
 import bookRouter from "./routes/bookRouter.js";
+import noteRouter from "./routes/noteRouter.js";
 
 //config
 const app = express();
@@ -28,6 +29,9 @@ app.use("/user", authRouter);
 
 //Book routes
 app.use("/books", bookRouter);
+
+//Note routes;
+app.use("/notes", noteRouter);
 
 
 

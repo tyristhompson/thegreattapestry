@@ -13,7 +13,6 @@ function Profile() {
         if (!authUser) {
             getUser().then((user) => {
                 user === false ? navigate("/login") : setAuthUser(user);
-                console.log(user);
             });
         }
     }, []);
@@ -28,6 +27,14 @@ function Profile() {
         const logOutSuccessful = await logOut();
         logOutSuccessful ? navigate("/") : navigate("/profile");
     }
+
+     function setBookInfo(bookKey) {
+        const keyLength = bookKey.length;
+        const configuredKey = bookKey.slice(-(keyLength - 7));
+
+        localStorage.setItem("book", JSON.stringify(configuredKey));
+        navigate("/profile/book/notes");
+    };
 
     return (
         <>
@@ -51,7 +58,8 @@ function Profile() {
                                             key={book.id}
                                             className={styles.bookCover}
                                             src={`https://covers.openlibrary.org/b/id/${book.cover}-L.jpg`}
-                                            alt={book.title + "book cover"}
+                                            alt={book.title + " " +  "book cover"}
+                                            onClick={() => {setBookInfo(book.book_key)}}
                                         />
                                     )
                                 })

@@ -62,5 +62,18 @@ export default {
             const errorMessage = "error adding book to library";
             return errorMessage;
         }
+    },
+    deleteFromLibrary: async (bookKey, userId) => {
+        try {
+            const fullKey = `/works/${bookKey}`;
+            const response = await pool.query("DELETE FROM library_test WHERE book_key = $1 AND user_id = $2 RETURNING book_key",
+            [fullKey, userId]
+        );
+
+        return response;
+
+        } catch (err) {
+            return err;
+        }
     }
 }
