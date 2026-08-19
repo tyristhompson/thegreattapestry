@@ -1,7 +1,9 @@
 .container {
+    width: 100%;
     margin: 0;
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 10rem;
 }
 
@@ -14,7 +16,7 @@ h2 {
     margin-bottom: 1rem;
 }
 
-p {
+.emptyLibrary p {
     font-size: 1.2rem;
     text-align: start;
     max-width: 50%;
@@ -24,7 +26,8 @@ p {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 1.2rem; 
+    min-width: 100%;
+    padding: 0 1.2rem;
 }
 
 .directory {
@@ -43,8 +46,8 @@ p {
 }
 
 a {
-    color: inherit;           
-    text-decoration: none;    
+    color: inherit;
+    text-decoration: none;
 }
 
 .emptyLibrary {
@@ -54,9 +57,19 @@ a {
     align-items: center;
 }
 
+.libraryContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.sort {
+  
+}
+
 .library {
     display: grid;
-    grid-template-columns: 20rem 20rem 20rem 20rem; 
+    grid-template-columns: 20rem 20rem 20rem 20rem;
     max-width: fit-content;
     gap: 2rem;
 }
@@ -65,4 +78,13 @@ a {
     width: 20rem;
     height: 28rem;
     border-radius: 1rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.bookCover:hover {
+    transform: translateY(-5px);
+    /* Moves the item up slightly */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    /* Adds a deep shadow */
+    cursor: pointer;
 }

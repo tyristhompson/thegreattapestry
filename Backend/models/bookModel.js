@@ -42,21 +42,30 @@ export default {
         }
     },
     getBookInfo: async (key) => {
-        try {
-            const result = await axios.get(`https://openlibrary.org/works/${key}.json`);
-            return result.data;
-        } catch (err) {
-            console.log(err);
-            return undefined
+        for (let attempt = 1; attempt <= 3; attempt++) {
+            try {
+                const result = await axios.get(`https://openlibrary.org/works/${key}.json`);
+                return result.data;
+            } catch (err) {
+                const retryable = ["ETIMEDOUT", "ECONNRESET"].includes(err.code);
+
+                if (!retryable || attempt === 3) {
+                    return undefined;
+                }
+
+                await new Promise(resolve =>
+                    setTimeout(resolve, attempt * 500)
+                );
+            }
         }
     },
     addToLibrary: async (title, key, userID, cover, description) => {
         try {
-          const response =  await pool.query("INSERT INTO library_test (title, book_key, user_id, cover, description)  VALUES ($1, $2, $3, $4, $5) RETURNING title, user_id",
+            const response = await pool.query("INSERT INTO library_test (title, book_key, user_id, cover, description)  VALUES ($1, $2, $3, $4, $5) RETURNING title, user_id",
                 [title, key, userID, cover, description]
             );
 
-        return response.rows[0];
+            return response.rows[0];
         } catch (err) {
             console.log(err);
             const errorMessage = "error adding book to library";
@@ -67,10 +76,10 @@ export default {
         try {
             const fullKey = `/works/${bookKey}`;
             const response = await pool.query("DELETE FROM library_test WHERE book_key = $1 AND user_id = $2 RETURNING book_key",
-            [fullKey, userId]
-        );
+                [fullKey, userId]
+            );
 
-        return response;
+            return response;
 
         } catch (err) {
             return err;

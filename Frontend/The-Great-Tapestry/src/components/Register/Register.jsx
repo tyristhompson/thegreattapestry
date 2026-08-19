@@ -1,4 +1,4 @@
-import styles from "../Login/Login.module.css";
+import styles from "./Register.module.css";
 import { AuthContext } from "../../contexts/authContext";
 import { useState, useContext } from "react";
 import axios from "axios";
@@ -38,11 +38,20 @@ function Register() {
     return (
         <>
             <title>Register</title>
-            <div className={styles.body}>
-                <img className={styles.profileImg} src="./images/profile-svgrepo-com.svg" alt="" />
-                <Form createUser={createUser} type="register" />
-                <p className={styles.subText}>Already have an account? <a href="/login">Login.</a></p>
-                {fetchError && <p className={styles.errorMessage}>{fetchErrorMessage}</p>}
+            <div className={styles.container}>
+                <div className={styles.flex}>
+                    <div className={styles.requirementContainer}>
+                        <p>Username must be between 3 to 12 characters</p>
+                        <p>Password must be between 9 to 25 characters</p>
+                        <p>Password must contain at least one special character (! # @ . ? :)</p>
+                    </div>
+                    <div className={styles.formContainer}>
+                        <img className={styles.profileImg} src="./images/profile-svgrepo-com.svg" alt="" />
+                        <Form createUser={createUser} type="register" />
+                        <p className={styles.subText}>Already have an account? <a href="/login">Login.</a></p>
+                        {fetchError && <p className={styles.errorMessage}>{fetchErrorMessage}</p>}
+                    </div>
+                </div>
             </div>
         </>
     )

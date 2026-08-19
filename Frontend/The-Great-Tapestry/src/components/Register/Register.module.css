@@ -1,0 +1,101 @@
+* {
+    font-family: "Inter", sans-serif;
+}
+
+.container {
+    height: 100%;
+    margin: 0;
+    flex-basis: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex {
+    display: flex;
+    justify-content: center;
+}
+
+.requirementContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: flex-end;
+}
+
+.requirementContainer p {
+    padding: 2rem 2rem;
+    margin: 0;
+    font-size: .8rem;
+}
+
+.required {
+    background-color: lightcoral;
+}
+
+.passed {
+    background-color: lightgreen;
+}
+
+.formContainer {
+    display: flex;
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 1.2rem;
+    border-left: 1px solid black;
+}
+
+.profileImg {
+    width: 5rem;
+    height: 5rem;
+    margin-bottom: 1rem;
+}
+
+.loginForm {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.loginForm div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.loginForm input {
+    margin-bottom: 1rem;
+    border: 1px solid gray;
+    border-radius: 8px;
+    padding: .5rem .5rem;
+}
+
+.clearButton {
+    border: none;
+    background-color: transparent;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.loginForm .error {
+    border: 1px solid red;
+    margin-bottom: 0;
+}
+
+.errorMessage {
+    color: red;
+    font-size: .6rem;
+    margin: 0 0 1rem 0;
+}
+
+.subText {
+    font-size: .8rem;
+}
+
+.subText a {
+    text-decoration: underline;
+}
