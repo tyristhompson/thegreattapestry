@@ -14,6 +14,7 @@ function BookInfo() {
     useEffect(() => {
         setIsLoading(true);
         fetchBookInfo(bookKey).then((info) => {
+            console.log(info.key)
             setBookDetails(info)
             setIsLoading(false)
         });
@@ -39,18 +40,28 @@ function BookInfo() {
     return (
         <>
             <div className={styles.container}>
-                <div className={styles.coverContainer}>
-                    <img src={`https://covers.openlibrary.org/b/id/${bookDetails.cover}-M.jpg`} alt={bookDetails.title + " " + "book cover"} />
+                <div className={styles.header}>
+                    <h2>
+                        The Great Tapestry
+                    </h2>
+                    <div className={styles.directory}>
+                        <p onClick={() => { navigate("/profile") }}>Profile</p>
+                    </div>
                 </div>
-                <div className={styles.infoContainer}>
-                    <h2 className={styles.title}>{bookDetails.title}</h2>
-                    {
-                        isLoading ? <p>...</p> :
-                        <Description value={bookDetails.description?.value ? bookDetails.description.value : bookDetails.description}/>
-                    }
-                    <div className={styles.addToLibrary}>
-                        <button className={styles.darkButton} onClick={addToLibrary}>Add</button>
-                        <button className={styles.clearButton} onClick={() => { navigate("/search") }}>Back</button>
+                <div className={styles.dashboard}>
+                    <div className={styles.coverContainer}>
+                        <img src={`https://covers.openlibrary.org/b/id/${bookDetails.cover}-M.jpg`} alt={bookDetails.title + " " + "book cover"} />
+                    </div>
+                    <div className={styles.infoContainer}>
+                        <h2 className={styles.title}>{bookDetails.title}</h2>
+                        {
+                            isLoading ? <p>...</p> :
+                                <Description value={bookDetails.description?.value ? bookDetails.description.value : bookDetails.description} />
+                        }
+                        <div className={styles.addToLibrary}>
+                            <button className={styles.darkButton} onClick={addToLibrary}>Add</button>
+                            <button className={styles.clearButton} onClick={() => { navigate("/search") }}>Back</button>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,0 +1,112 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.bookInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 2rem;
+    width: 100%;
+}
+
+.bookUtils {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+.bookActions {
+    border: none;
+    background-color: transparent;
+    margin-left: .75rem;
+}
+
+.bookActions img{
+    width: 2rem;
+    height: 2rem;
+}
+
+.bookInfo h2 {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 2rem;
+    margin: 1.75rem 0 .5rem 0;
+}
+
+.searchAndSortContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 2rem;
+    margin-top: 2rem;
+}
+
+.searchContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid black;
+}
+
+.searchImg {
+    width: 1.75rem;
+    height: 1.75rem;
+}
+
+.search {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border: none;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    cursor: text;
+}
+
+.search:focus {
+    outline: none;
+}
+
+.sortContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.utilImageContainer {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+
+}
+
+.utils {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+}
+
+.annotationGrid {
+    width: 100%;
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 30rem), 1fr));
+    gap: 1rem 1rem;
+}
