@@ -6,6 +6,21 @@
     height: 100%;
 }
 
+.tooltip {
+    visibility: hidden;
+    position: absolute;
+    text-align: center;
+    color: rgb(182, 180, 180);
+    font-weight: 500;
+    font-size: .75rem;
+    left: -1rem;
+    top: 2rem;
+    background-color: rgb(36, 36, 36);
+    padding: .2rem;
+    border-radius: .2rem;
+    transition: color 0.3s ease;
+}
+
 .bookInfo {
     display: flex;
     flex-direction: column;
@@ -24,12 +39,19 @@
 }
 
 .bookActions {
+    position: relative;
     border: none;
     background-color: transparent;
     margin-left: .75rem;
 }
 
-.bookActions img{
+
+
+.bookActions:hover .tooltip {
+    visibility: visible;
+}
+
+.bookActions img {
     width: 2rem;
     height: 2rem;
 }
@@ -86,6 +108,7 @@
 }
 
 .utilImageContainer {
+    position: relative;
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 50%;
@@ -95,6 +118,15 @@
     background-color: white;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 
+}
+
+.utilImageContainer:hover {
+    transform: scale(1.1, 1.1);
+    cursor: pointer;
+}
+
+.utilImageContainer:hover .tooltip {
+    visibility: visible;
 }
 
 .utils {

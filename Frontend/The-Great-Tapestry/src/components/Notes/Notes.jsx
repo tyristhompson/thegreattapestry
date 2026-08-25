@@ -4,35 +4,20 @@ import { fetchBookInfo, deleteBook, createNote, fetchNote, updateNote } from "..
 import { useEffect, useState } from "react";
 import Annotation from "./Annotation";
 import Rating from "./Rating";
+import EditText from "./EditText";
 
 function Notes() {
     const navigate = useNavigate();
-    const [input, setInput] = useState("");
-    const [noteExists, setNoteExists] = useState(false);
     const bookKey = JSON.parse(localStorage.getItem("book"));
     const [bookDetails, setBookDetails] = useState({});
+    const [annotations, setAnnotations] = useState([]);
+    const [modalOpen, setModalOpen] = useState(false);
 
     useEffect(() => {
         fetchBookInfo(bookKey).then((info) => {
             setBookDetails(info)
         });
     }, []);
-
-    useEffect(() => {
-        fetchNote(bookKey).then((note) => {
-            if (note) {
-                setInput(note)
-                setNoteExists(true)
-            } else {
-                setNoteExists(false)
-            }
-        });
-    }, []);
-
-    function updateInput(event) {
-        const value = event.target.value;
-        setInput(value);
-    };
 
     async function removeFromLibrary() {
         try {
@@ -47,27 +32,8 @@ function Notes() {
         }
     };
 
-    async function saveNote(bookKey, note) {
-        try {
-            if (noteExists) {
-                const response = await updateNote(bookKey, note);
-                if (response.status === 200) {
-                    console.log("success")
-                } else {
-                    console.log(response)
-                }
-            } else {
-                setNoteExists(true)
-                const response = await createNote(bookKey, note);
-                if (response.status === 200) {
-                    console.log("success")
-                } else {
-                    console.log(response)
-                }
-            }
-        } catch (err) {
-            console.log(err)
-        }
+    function addAnnotation() {
+        setModalOpen(true);
     }
 
     return (
@@ -77,12 +43,15 @@ function Notes() {
                     <div className={styles.bookUtils}>
                         <button onClick={() => { navigate("/profile") }} className={styles.bookActions}>
                             <img src="/images/back.svg" alt="" />
+                            <p className={styles.tooltip}>Back</p>
                         </button>
                         <button className={styles.bookActions}>
                             <img src="/images/image-square.svg" alt="" />
+                            <p className={styles.tooltip}>Add Background Image</p>
                         </button>
                         <button onClick={removeFromLibrary} className={styles.bookActions}>
                             <img src="/images/delete-book.svg" alt="" />
+                            <p className={styles.tooltip}>Remove From Library</p>
                         </button>
                     </div>
                     <img src={`https://covers.openlibrary.org/b/id/${bookDetails.cover}-M.jpg`} alt={bookDetails.title + " " + "book cover"} />
@@ -95,21 +64,36 @@ function Notes() {
                         <input className={styles.search} type="text" />
                     </div>
                     <div className={styles.sortContainer}>
-                        <div className={styles.utilImageContainer}>
+                        <div onClick={addAnnotation} className={styles.utilImageContainer}>
                             <img className={styles.utils} src="/images/add.svg" alt="" />
+                            <p className={styles.tooltip}>Add Annotation</p>
                         </div>
                         <div className={styles.utilImageContainer}>
                             <img className={styles.utils} src="/images/filter.svg" alt="" />
+                            <p className={styles.tooltip}>Filter</p>
                         </div>
                     </div>
+                    <EditText isOpen={modalOpen} onClose={() => {setModalOpen(false)}}/>
                 </div>
-                <div className={styles.annotationGrid}>
-                    <Annotation />
-                    <Annotation />
-                    <Annotation />
-                    <Annotation />
-                    <Annotation />
-                </div>
+                {
+                    annotations.length > 0 ?
+                        <>
+                            <div className={styles.annotationGrid}>
+                                {
+                                    annotations.map((annotation) => {
+                                        return (
+                                            <Annotation 
+                                            key={annotation.index} 
+                                            title={annotation.title} 
+                                            text={annotation.text} 
+                                            />
+                                        )
+                                    })
+                                }
+                            </div>
+                        </> :
+                    <h3>Create an Annotation to see it here!</h3>
+                }
             </div>
         </>
     )
