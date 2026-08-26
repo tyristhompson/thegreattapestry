@@ -1,3 +1,8 @@
+.modal {
+    width: 20rem;
+    height: 20rem;
+}
+
 .modal::backdrop {
     background-color: rgb(0, 0, 0, 0.5);
     backdrop-filter: blur(2px);
