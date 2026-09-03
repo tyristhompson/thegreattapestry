@@ -75,44 +75,68 @@ const deleteBook = async (key) => {
     }
 };
 
-const fetchNote = async (key) => {
+const fetchNotes = async (key) => {
     try {
         const response = await axios.get(`http://localhost:3000/notes/${key}`, {
             withCredentials: true,
         });
-        return response.data.note;
+        return response.data.notes;
     } catch (err) {
         return err;
     }
 };
 
-const createNote = async (key, note) => {
+const createNote = async (key, title, note) => {
     try {
         const response = await axios.post(`http://localhost:3000/notes/create/${key}`, {
+            title: title,
+            note: note,
+        }, {
+            withCredentials: true, 
+        });
+        return response.data.added.rows[0];
+    } catch (err) {
+        return err;
+    }
+};
+
+const updateNote = async (noteId, title, note) => {
+    try {
+        const response = await axios.patch(`http://localhost:3000/notes/update/${noteId}`, {
+            title: title,
             note: note,
         }, {
             withCredentials: true,
         });
 
+        return response.data.updated.rows[0];
+    } catch (err) {
+        return err;
+    }
+};
+
+const deleteNote = async (id) => {
+    try {
+        const response = await axios.delete(`http://localhost:3000/notes/delete/${id}`, {
+            withCredentials: true,
+        });
         return response;
     } catch (err) {
         return err;
     }
 };
 
-const updateNote = async (key, note) => {
-    try {
-        const response = await axios.patch(`http://localhost:3000/notes/update/${key}`, {
-            note: note,
-        }, {
-            withCredentials: true,
-        });
 
-        return response;
-    } catch (err) {
-        return err;
-    }
-}
-
-
-export { bannedChar, errorMessages, getUser, getLibrary, logOut, fetchBookInfo, deleteBook, createNote, fetchNote, updateNote };
+export { 
+    bannedChar, 
+    errorMessages, 
+    getUser, 
+    getLibrary, 
+    logOut, 
+    fetchBookInfo, 
+    deleteBook, 
+    createNote, 
+    fetchNotes, 
+    updateNote,
+    deleteNote
+ };

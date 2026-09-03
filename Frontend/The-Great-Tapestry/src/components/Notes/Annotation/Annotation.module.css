@@ -24,6 +24,12 @@
   transition: color 0.3s ease;
 }
 
+.annotationContainer {
+  mask-image: linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1) 45%);
+  height: 20rem;
+  overflow: hidden;
+}
+
 .annotation {
   font-family: "Cormorant Garamond", serif;
   font-weight: 500;

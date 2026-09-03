@@ -8,7 +8,7 @@ noteRouter.get("/:key", async (req, res) => {
         return res.status(401).json({ error: "please log in" })
     }
     const response = await noteModel.getNote(req.params.key, req.user.id);
-    return res.status(200).json(response);
+    return res.status(200).json({notes: response});
 });
 
 noteRouter.post("/create/:key", async (req, res) => {
@@ -20,14 +20,14 @@ noteRouter.post("/create/:key", async (req, res) => {
     }
 
     try {
-        const response = await noteModel.createNote(req.params.key, req.user.id, req.body.note);
+        const response = await noteModel.createNote(req.params.key, req.user.id, req.body.title, req.body.note);
         return res.status(200).json({ added: response });
     } catch (error) {
         return res.status(400).json(error)
     }
 });
 
-noteRouter.patch("/update/:key", async (req, res) => {
+noteRouter.patch("/update/:id", async (req, res) => {
     if (!req.isAuthenticated()) {
         return res.status(401).json({ error: "please log in" })
     }
@@ -36,11 +36,27 @@ noteRouter.patch("/update/:key", async (req, res) => {
     }
 
     try {
-        const response = await noteModel.updateNote(req.params.key, req.user.id, req.body.note);
+        const response = await noteModel.updateNote(req.params.id, req.user.id, req.body.title, req.body.note);
         return res.status(200).json({ updated: response });
     } catch (error) {
         return res.status(400).json(error)
     }
 });
+
+noteRouter.delete("/delete/:id", async (req, res) => {
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ error: "please log in" })
+    }
+    if (!req.params.id) {
+        return res.status(400).json("Bad Request");
+    }
+
+    try {
+        const response = await noteModel.deleteNote(req.params.id, req.user.id);
+        return res.status(200).json({ deleted: response });
+    } catch (error) {
+        return res.status(400).json(error)
+    }
+})
 
 export default noteRouter;
