@@ -1,13 +1,16 @@
 import styles from "./Notes.module.css"
 import { useState, useEffect } from "react";
-import { fetchNotes, deleteNote } from "../Utlities";
+import { fetchNotes } from "../Utlities";
 import SearchAndSort from "./SearchAndSort";
-import Annotation from "./Annotation/Annotation"
+import Annotation from "./Annotation/Annotation";
+import ConfirmDelete from "./Annotation/ConfirmDelete";
 
 
-function AnnotationGrid () {
+function AnnotationGrid() {
     const bookKey = JSON.parse(localStorage.getItem("book"));
     const [annotations, setAnnotations] = useState([]);
+    const [deletionId, setDeletionId] = useState(undefined);
+    const [modalOpen, setModalOpen] = useState(false);
 
     useEffect(() => {
         fetchNotes(bookKey).then((notes) => {
@@ -16,47 +19,48 @@ function AnnotationGrid () {
     }, []);
 
     function updateAnnotationGrid(newAnnotation) {
-            setAnnotations(prev => [...prev, newAnnotation]);
+        setAnnotations(prev => [...prev, newAnnotation]);
     }
 
     async function deleteAnnotation(annotationId) {
-        try {
-            const response = await deleteNote(annotationId);
-            if (response.status === 200) {
-                const newAnnotationArray = annotations.filter(annotation => annotation.id !== annotationId);
-                setAnnotations(newAnnotationArray);
-            } else {
-                console.log(response)
-            }
-        } catch (err) {
-            console.log(err)
-        }
+        setModalOpen(true);
+        setDeletionId(annotationId);
     }
 
     return (
         <>
-        <SearchAndSort updateAnnotationGrid={updateAnnotationGrid}/>
-         {
-                    annotations?.length > 0 ?
-                        <>
-                            <div className={styles.annotationGrid}>
-                                {
-                                    annotations.map((annotation) => {
-                                        return (
-                                            <Annotation
-                                                key={annotation.id}
-                                                id={annotation.id}
-                                                title={annotation.title}
-                                                text={annotation.note}
-                                                deleteAnnotation={deleteAnnotation}
-                                            />
-                                        )
-                                    })
-                                }
-                            </div>
-                        </> :
-                        <h3>Create an Annotation to see it here!</h3>
-                }
+            <SearchAndSort updateAnnotationGrid={updateAnnotationGrid} />
+            {
+                annotations?.length > 0 ?
+                    <>
+                        <div className={styles.annotationGrid}>
+                            {
+                                annotations.map((annotation) => {
+                                    return (
+                                        <Annotation
+                                            key={annotation.id}
+                                            id={annotation.id}
+                                            title={annotation.title}
+                                            text={annotation.note}
+                                            deleteAnnotation={deleteAnnotation}
+                                        />
+                                    )
+                                })
+                            }
+                            {
+                                modalOpen &&
+                                <ConfirmDelete
+                                    annotations={annotations}
+                                    setAnnotations={setAnnotations}
+                                    id={deletionId}
+                                    isOpen={modalOpen}
+                                    onClose={() => { setModalOpen(false) }}
+                                />
+                            }
+                        </div>
+                    </> :
+                    <h3>Create an Annotation to see it here!</h3>
+            }
         </>
     )
 };
