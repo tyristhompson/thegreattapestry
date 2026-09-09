@@ -86,11 +86,12 @@ const fetchNotes = async (key) => {
     }
 };
 
-const createNote = async (key, title, note) => {
+const createNote = async (key, title, tags, note) => {
     try {
         const response = await axios.post(`http://localhost:3000/notes/create/${key}`, {
             title: title,
             note: note,
+            tags: tags,
         }, {
             withCredentials: true, 
         });
@@ -100,11 +101,12 @@ const createNote = async (key, title, note) => {
     }
 };
 
-const updateNote = async (noteId, title, note) => {
+const updateNote = async (noteId, title, tags, note) => {
     try {
         const response = await axios.patch(`http://localhost:3000/notes/update/${noteId}`, {
             title: title,
             note: note,
+            tags: tags,
         }, {
             withCredentials: true,
         });
@@ -126,6 +128,30 @@ const deleteNote = async (id) => {
     }
 };
 
+const getTags = async (id) => {
+    try {
+        const response = await axios.get(`http://localhost:3000/notes/tags/${id}`, {
+            withCredentials: true,
+        });
+        return response.data.tags.rows[0].tags;
+    } catch (err) {
+        return err;
+    }
+};
+
+const updateTags = async (id, tags) => {
+    try {
+        const response = await axios.patch(`http://localhost:3000/notes/tags/patch/${id}`, {
+            tags: tags,
+        }, {
+            withCredentials: true,
+        });
+
+        return response.data.tags
+    } catch (err) {
+        return err;
+    }
+};
 
 export { 
     bannedChar, 
@@ -138,5 +164,7 @@ export {
     createNote, 
     fetchNotes, 
     updateNote,
-    deleteNote
+    deleteNote,
+    getTags,
+    updateTags,
  };

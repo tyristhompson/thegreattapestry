@@ -42,6 +42,7 @@ function AnnotationGrid() {
                                             id={annotation.id}
                                             title={annotation.title}
                                             text={annotation.note}
+                                            tags={annotation.tags}
                                             deleteAnnotation={deleteAnnotation}
                                         />
                                     )

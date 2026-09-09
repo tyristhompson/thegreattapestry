@@ -5,6 +5,7 @@ import EditText from "./TextEditor/EditText";
 function SearchAndSort({ updateAnnotationGrid }) {
     const [modalOpen, setModalOpen] = useState(false);
     const initialText = '<p>Start creating your thread.</p>';
+    const [savedTags, setSavedTags] = useState([]);
 
      function addAnnotation() {
         setModalOpen(true);
@@ -31,6 +32,8 @@ function SearchAndSort({ updateAnnotationGrid }) {
                     modalOpen && <EditText
                         saveAnnotation={updateAnnotationGrid}
                         initialContent={initialText}
+                        savedTags={savedTags}
+                        setSavedTags={(tags) => setSavedTags(tags)}
                         isEditing={false}
                         isOpen={modalOpen}
                         onClose={() => { setModalOpen(false) }}

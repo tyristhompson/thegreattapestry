@@ -1,14 +1,14 @@
 import styles from './Tiptap.module.css';
 import { createNote, updateNote } from '../../Utlities';
 
-function SaveNote({ editor, saveAnnotation, noteTitle, isEditing, onContentChange, noteId }) {
+function SaveNote({ editor, saveAnnotation, noteTitle, previewTags, savedTags, isEditing, onContentChange, noteId }) {
     const bookKey = JSON.parse(localStorage.getItem("book"));
 
     async function updateAnnotationGrid () {
         if(isEditing) {
-            updateNote(noteId, noteTitle, JSON.stringify(editor.getJSON())).then((response) => {onContentChange(response.title, response.note)})
+            updateNote(noteId, noteTitle, previewTags, JSON.stringify(editor.getJSON())).then((response) => {onContentChange(response.title, response.note, response.tags)})
         } else {
-            createNote(bookKey, noteTitle, JSON.stringify(editor.getJSON())).then((response) => saveAnnotation(response))
+            createNote(bookKey, noteTitle, savedTags, JSON.stringify(editor.getJSON())).then((response) => saveAnnotation(response))
         }
     }
 

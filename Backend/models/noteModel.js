@@ -4,7 +4,7 @@ export default {
     getNote: async (bookKey, userId) => {
         try {
             const fullKey = `/works/${bookKey}`;
-            const response = await pool.query("SELECT id, note, title FROM notes WHERE book_key = $1 AND user_id = $2",
+            const response = await pool.query("SELECT id, note, title, tags FROM notes WHERE book_key = $1 AND user_id = $2",
                 [fullKey, userId]
             );
 
@@ -18,11 +18,11 @@ export default {
             return err;
         }
     },
-    createNote: async (bookKey, userId, title, note) => {
+    createNote: async (bookKey, userId, title, note, tags) => {
         try {
             const fullKey = `/works/${bookKey}`;
-            const response = pool.query("INSERT INTO notes (book_key, user_id, note, title)  VALUES ($1, $2, $3, $4) RETURNING id, title, note",
-                [fullKey, userId, note, title]
+            const response = pool.query("INSERT INTO notes (book_key, user_id, note, title, tags)  VALUES ($1, $2, $3, $4, $5::text[]) RETURNING id, title, note, tags",
+                [fullKey, userId, note, title, tags]
             );
 
             return response;
@@ -41,10 +41,33 @@ export default {
             return err;
         }
     },
-    updateNote: async (noteId, userId, title, note) => {
+    updateNote: async (noteId, userId, title, note, tags) => {
+        console.log(tags);
         try {
-            const response = await pool.query("UPDATE notes SET note = $1, title= $2 WHERE id = $3 AND user_id = $4 RETURNING id, title, note",
-                [note, title, noteId, userId]
+            const response = await pool.query("UPDATE notes SET note = $1, title= $2, tags = $3::text[] WHERE id = $4 AND user_id = $5 RETURNING id, title, note, tags",
+                [note, title, tags, noteId, userId]
+            );
+            return response;
+        } catch (err) {
+            console.log(err)
+            return err;
+        }
+    },
+    getTags: async (noteId, userId) => {
+        try {
+            const response = await pool.query("SELECT tags FROM notes WHERE id = $1 AND user_id = $2",
+                [noteId, userId]
+            );
+
+            return response;
+        } catch (err) {
+            return err;
+        }
+    },
+    updateTags: async (noteId, userId, tags) => {
+        try {
+            const response = await pool.query("UPDATE notes SET tags = $1 WHERE id = $2 AND user_id = $3 RETURNING tags",
+                [tags, noteId, userId]
             );
 
             return response;

@@ -2,15 +2,18 @@ import { useState } from "react";
 import styles from "./Annotation.module.css";
 import TextPreview from "./TextPreview";
 import EditText from "../TextEditor/EditText";
+import Tags from "../Tags/Tags";
 
-function Annotation({ id, title, text, deleteAnnotation }) {
+function Annotation({ id, title, text, tags, deleteAnnotation }) {
     const [modalOpen, setModalOpen] = useState(false);
     const [previewTitle, setPreviewTitle] = useState(title);
     const [initialContent, setInitialContent] = useState(text);
+    const [previewTags, setPreviewTags] = useState(tags);
 
-    function updateAnnotationPreview(newTitle, newNote) {
+    function updateAnnotationPreview(newTitle, newNote, newTags) {
         setPreviewTitle(newTitle);
         setInitialContent(newNote);
+        setPreviewTags(newTags);
     }
 
 
@@ -31,14 +34,17 @@ function Annotation({ id, title, text, deleteAnnotation }) {
                     </div>
                 </div>
                 <div className={styles.annotationContainer}>
+                    <Tags noteId={id} isOpen={modalOpen} previewTags={previewTags} isPreview={true}/>
                     <TextPreview initialContent={initialContent} /> 
                     {
                         modalOpen &&
                             <EditText
                                 noteId={id}
                                 title={previewTitle}
+                                previewTags={previewTags}
+                                setPreviewTags={(tags) => setPreviewTags(tags)}
                                 initialContent={initialContent}
-                                onContentChange={(newTitle, newNote) => {updateAnnotationPreview(newTitle, newNote)}}
+                                onContentChange={(newTitle, newNote, newTags) => {updateAnnotationPreview(newTitle, newNote, newTags)}}
                                 isEditing={true}
                                 isOpen={modalOpen}
                                 onClose={() => { setModalOpen(false) }}

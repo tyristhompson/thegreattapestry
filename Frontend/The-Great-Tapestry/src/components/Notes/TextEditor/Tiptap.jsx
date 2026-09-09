@@ -5,7 +5,7 @@ import Highlight from '@tiptap/extension-highlight';
 import EditorUtils from './EditorUtils';
 import { useState } from 'react';
 
-function Tiptap({ saveAnnotation, initialContent, title, isEditing, onContentChange, noteId }) {
+function Tiptap({ saveAnnotation, initialContent, title, previewTags, savedTags, isEditing, onContentChange, noteId }) {
     const [input, setInput] = useState(title);
 
     function updateTitle(event) {
@@ -14,8 +14,8 @@ function Tiptap({ saveAnnotation, initialContent, title, isEditing, onContentCha
     };
 
     const editor = useEditor({
-        extensions: [StarterKit, Highlight.configure({ multicolor: true })], // define your extension array
-        content: initialContent, // initial content
+        extensions: [StarterKit, Highlight.configure({ multicolor: true })], 
+        content: initialContent, 
         autofocus: true,
     });
 
@@ -28,7 +28,15 @@ function Tiptap({ saveAnnotation, initialContent, title, isEditing, onContentCha
             <div className={styles.container}>
                 <div className={styles.titleAndUtilsContainer}>
                     <input className={styles.title} onChange={updateTitle} type="text" name="title" id="" value={input} />
-                    <EditorUtils noteTitle={input} isEditing={isEditing} noteId={noteId} saveAnnotation={saveAnnotation} onContentChange={onContentChange} editor={editor} />
+                    <EditorUtils 
+                    noteTitle={input}
+                    previewTags={previewTags} 
+                    savedTags={savedTags}
+                    isEditing={isEditing} 
+                    noteId={noteId} 
+                    saveAnnotation={saveAnnotation} 
+                    onContentChange={onContentChange} 
+                    editor={editor} />
                 </div>
                 <div className={styles.editorContainer}>
                     <EditorContent editor={editor} />

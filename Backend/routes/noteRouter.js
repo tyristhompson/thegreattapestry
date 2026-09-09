@@ -18,9 +18,12 @@ noteRouter.post("/create/:key", async (req, res) => {
     if (!req.body?.note) {
         return res.status(400).json("Bad Request");
     }
+    if (!req.body?.tags) {
+        return res.status(400).json("Bad Request");
+    }
 
     try {
-        const response = await noteModel.createNote(req.params.key, req.user.id, req.body.title, req.body.note);
+        const response = await noteModel.createNote(req.params.key, req.user.id, req.body.title, req.body.note, req.body.tags);
         return res.status(200).json({ added: response });
     } catch (error) {
         return res.status(400).json(error)
@@ -36,12 +39,42 @@ noteRouter.patch("/update/:id", async (req, res) => {
     }
 
     try {
-        const response = await noteModel.updateNote(req.params.id, req.user.id, req.body.title, req.body.note);
+        const response = await noteModel.updateNote(req.params.id, req.user.id, req.body.title, req.body.note, req.body.tags);
         return res.status(200).json({ updated: response });
     } catch (error) {
         return res.status(400).json(error)
     }
 });
+
+noteRouter.get("/tags/:id", async (req, res) => {
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ error: "please log in" })
+    }
+
+    try {
+        const response = await noteModel.getTags(req.params.id, req.user.id);
+        return res.status(200).json({ tags: response });
+    } catch (error) {
+        return res.status(400).json(error)
+    }
+
+});
+
+noteRouter.patch("/tags/patch/:id", async (req, res) => {
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ error: "please log in" })
+    }
+    if (!req.body?.tags) {
+        return res.status(400).json("Bad Request");
+    }
+
+    try {
+        const response = await noteModel.updateTags(req.params.id, req.user.id, req.body.tags);
+        return res.status(200).json({ tags: response });
+    } catch (error) {
+        return res.status(400).json(error)
+    }
+})
 
 noteRouter.delete("/delete/:id", async (req, res) => {
     if (!req.isAuthenticated()) {
@@ -57,6 +90,6 @@ noteRouter.delete("/delete/:id", async (req, res) => {
     } catch (error) {
         return res.status(400).json(error)
     }
-})
+});
 
 export default noteRouter;
