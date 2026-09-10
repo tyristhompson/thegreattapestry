@@ -1,23 +1,23 @@
 import { useState } from "react";
-import styles from "./Notes.module.css";
-import EditText from "./TextEditor/EditText";
+import styles from "../Notes.module.css";
+import EditText from "../TextEditor/EditText";
+import SearchBar from "./SearchBar";
 
-function SearchAndSort({ updateAnnotationGrid }) {
+function SearchAndSort({ updateAnnotationGrid, findNoteBySubString }) {
     const [modalOpen, setModalOpen] = useState(false);
     const initialText = '<p>Start creating your thread.</p>';
     const [savedTags, setSavedTags] = useState([]);
 
-     function addAnnotation() {
+    function addAnnotation() {
         setModalOpen(true);
     }
 
     return (
         <>
             <div className={styles.searchAndSortContainer}>
-                <div className={styles.searchContainer}>
-                    <img className={styles.searchImg} src="/images/search-outline.svg" alt="" />
-                    <input className={styles.search} type="text" />
-                </div>
+                <SearchBar
+                    findNoteBySubString={findNoteBySubString}
+                />
                 <div className={styles.sortContainer}>
                     <div onClick={addAnnotation} className={styles.utilImageContainer}>
                         <img className={styles.utils} src="/images/add.svg" alt="" />

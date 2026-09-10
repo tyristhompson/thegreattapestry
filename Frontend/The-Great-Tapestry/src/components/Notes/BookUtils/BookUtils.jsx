@@ -45,7 +45,7 @@ function BookUtils() {
                         <p className={styles.tooltip}>Remove From Library</p>
                     </button>
                 </div>
-                <img src={`https://covers.openlibrary.org/b/id/${bookDetails.cover}-M.jpg`} alt={bookDetails.title + " " + "book cover"} />
+                <img src={bookDetails?.cover ?`https://covers.openlibrary.org/b/id/${bookDetails.cover}-M.jpg` : "./images/call-me-by-your-name.jpg"} alt={bookDetails.title + " " + "book cover"} />
                 <h2>{bookDetails.title}</h2>
                 <Rating />
             </div>

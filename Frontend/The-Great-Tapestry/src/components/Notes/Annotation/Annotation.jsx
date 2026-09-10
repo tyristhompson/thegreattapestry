@@ -4,7 +4,7 @@ import TextPreview from "./TextPreview";
 import EditText from "../TextEditor/EditText";
 import Tags from "../Tags/Tags";
 
-function Annotation({ id, title, text, tags, deleteAnnotation }) {
+function Annotation({ id, title, text, tags, deleteAnnotation, saveAnnotation }) {
     const [modalOpen, setModalOpen] = useState(false);
     const [previewTitle, setPreviewTitle] = useState(title);
     const [initialContent, setInitialContent] = useState(text);
@@ -45,6 +45,7 @@ function Annotation({ id, title, text, tags, deleteAnnotation }) {
                                 setPreviewTags={(tags) => setPreviewTags(tags)}
                                 initialContent={initialContent}
                                 onContentChange={(newTitle, newNote, newTags) => {updateAnnotationPreview(newTitle, newNote, newTags)}}
+                                saveAnnotation={saveAnnotation}
                                 isEditing={true}
                                 isOpen={modalOpen}
                                 onClose={() => { setModalOpen(false) }}

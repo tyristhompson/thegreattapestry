@@ -42,7 +42,6 @@ export default {
         }
     },
     updateNote: async (noteId, userId, title, note, tags) => {
-        console.log(tags);
         try {
             const response = await pool.query("UPDATE notes SET note = $1, title= $2, tags = $3::text[] WHERE id = $4 AND user_id = $5 RETURNING id, title, note, tags",
                 [note, title, tags, noteId, userId]

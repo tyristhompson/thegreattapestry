@@ -1,35 +1,9 @@
 import styles from "./Notes.module.css"
-import { useState, useEffect } from "react";
-import { fetchNotes } from "../Utlities";
-import SearchAndSort from "./SearchAndSort";
 import Annotation from "./Annotation/Annotation";
-import ConfirmDelete from "./Annotation/ConfirmDelete";
 
-
-function AnnotationGrid() {
-    const bookKey = JSON.parse(localStorage.getItem("book"));
-    const [annotations, setAnnotations] = useState([]);
-    const [deletionId, setDeletionId] = useState(undefined);
-    const [modalOpen, setModalOpen] = useState(false);
-
-    useEffect(() => {
-        fetchNotes(bookKey).then((notes) => {
-            setAnnotations(notes)
-        });
-    }, []);
-
-    function updateAnnotationGrid(newAnnotation) {
-        setAnnotations(prev => [...prev, newAnnotation]);
-    }
-
-    async function deleteAnnotation(annotationId) {
-        setModalOpen(true);
-        setDeletionId(annotationId);
-    }
-
+function AnnotationGrid({ annotations, searchString, deleteAnnotation, updateAnnotationGrid }) {
     return (
         <>
-            <SearchAndSort updateAnnotationGrid={updateAnnotationGrid} />
             {
                 annotations?.length > 0 ?
                     <>
@@ -44,23 +18,14 @@ function AnnotationGrid() {
                                             text={annotation.note}
                                             tags={annotation.tags}
                                             deleteAnnotation={deleteAnnotation}
+                                            saveAnnotation={updateAnnotationGrid}
                                         />
                                     )
                                 })
                             }
-                            {
-                                modalOpen &&
-                                <ConfirmDelete
-                                    annotations={annotations}
-                                    setAnnotations={setAnnotations}
-                                    id={deletionId}
-                                    isOpen={modalOpen}
-                                    onClose={() => { setModalOpen(false) }}
-                                />
-                            }
                         </div>
                     </> :
-                    <h3>Create an Annotation to see it here!</h3>
+                    <h3>{searchString?.length > 0 ? "No Annotations match your search." : "Create an Annotation to see it here!"}</h3>
             }
         </>
     )

@@ -6,7 +6,10 @@ function SaveNote({ editor, saveAnnotation, noteTitle, previewTags, savedTags, i
 
     async function updateAnnotationGrid () {
         if(isEditing) {
-            updateNote(noteId, noteTitle, previewTags, JSON.stringify(editor.getJSON())).then((response) => {onContentChange(response.title, response.note, response.tags)})
+            updateNote(noteId, noteTitle, previewTags, JSON.stringify(editor.getJSON())).then((response) => {
+                onContentChange(response.title, response.note, response.tags);
+                saveAnnotation();
+            })
         } else {
             createNote(bookKey, noteTitle, savedTags, JSON.stringify(editor.getJSON())).then((response) => saveAnnotation(response))
         }
