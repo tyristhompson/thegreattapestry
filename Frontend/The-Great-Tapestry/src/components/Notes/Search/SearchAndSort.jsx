@@ -2,8 +2,9 @@ import { useState } from "react";
 import styles from "../Notes.module.css";
 import EditText from "../TextEditor/EditText";
 import SearchBar from "./SearchBar";
+import Sort from "./Sort";
 
-function SearchAndSort({ updateAnnotationGrid, findNoteBySubString }) {
+function SearchAndSort({ updateAnnotationGrid, findNoteBySubString, sortEnabled, setSort }) {
     const [modalOpen, setModalOpen] = useState(false);
     const initialText = '<p>Start creating your thread.</p>';
     const [savedTags, setSavedTags] = useState([]);
@@ -23,10 +24,10 @@ function SearchAndSort({ updateAnnotationGrid, findNoteBySubString }) {
                         <img className={styles.utils} src="/images/add.svg" alt="" />
                         <p className={styles.tooltip}>Add Annotation</p>
                     </div>
-                    <div className={styles.utilImageContainer}>
-                        <img className={styles.utils} src="/images/filter.svg" alt="" />
-                        <p className={styles.tooltip}>Filter</p>
-                    </div>
+                    <Sort
+                        sortEnabled={sortEnabled}
+                        setSort={(sortType) => setSort(sortType)}
+                    />
                 </div>
                 {
                     modalOpen && <EditText

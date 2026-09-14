@@ -46,36 +46,6 @@ noteRouter.patch("/update/:id", async (req, res) => {
     }
 });
 
-noteRouter.get("/tags/:id", async (req, res) => {
-    if (!req.isAuthenticated()) {
-        return res.status(401).json({ error: "please log in" })
-    }
-
-    try {
-        const response = await noteModel.getTags(req.params.id, req.user.id);
-        return res.status(200).json({ tags: response });
-    } catch (error) {
-        return res.status(400).json(error)
-    }
-
-});
-
-noteRouter.patch("/tags/patch/:id", async (req, res) => {
-    if (!req.isAuthenticated()) {
-        return res.status(401).json({ error: "please log in" })
-    }
-    if (!req.body?.tags) {
-        return res.status(400).json("Bad Request");
-    }
-
-    try {
-        const response = await noteModel.updateTags(req.params.id, req.user.id, req.body.tags);
-        return res.status(200).json({ tags: response });
-    } catch (error) {
-        return res.status(400).json(error)
-    }
-})
-
 noteRouter.delete("/delete/:id", async (req, res) => {
     if (!req.isAuthenticated()) {
         return res.status(401).json({ error: "please log in" })
