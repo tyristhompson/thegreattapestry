@@ -34,7 +34,7 @@ bookRouter.get(`/info/:key`, async (req, res) => {
             title: bookResponse.title,
             description: bookResponse.description,
             cover: bookResponse.covers[0],
-            key: bookResponse.key
+            key: bookResponse.key,
         };
 
         return res.status(200).json({ book: info });
@@ -44,6 +44,32 @@ bookRouter.get(`/info/:key`, async (req, res) => {
     };
 
 });
+
+bookRouter.get('/utils/:key', async (req, res) => {
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ error: "please log in" })
+    }
+
+    try {
+        const response = await bookModel.getBookFromLibrary(req.params.key, req.user.id);
+        return res.status(200).json({book: response});
+    } catch (err) {
+        return res.status(200).json({error: err})
+    }
+});
+
+bookRouter.patch('/update/:key', async (req, res) => {
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ error: "please log in" })
+    }
+
+    try {
+        const response = await bookModel.updateRating(req.params.key, req.user.id, req.body.rating)
+        return res.status(200).json({rating: response});
+    } catch (err) {
+        return res.status(200).json({error: err});
+    }
+})
 
 bookRouter.post('/add', async (req, res) => {
     if (!req.isAuthenticated()) {
@@ -70,7 +96,7 @@ bookRouter.delete('/delete/:key', async (req, res) => {
     }
     if (req.params.key) {
         try {
-            const noteResponse = await noteModel.deleteNote(req.params.key, req.user.id);
+            const noteResponse = await noteModel.deleteAllNotes(req.params.key, req.user.id);
             const bookResponse = await bookModel.deleteFromLibrary(req.params.key, req.user.id);
             return res.status(200).json({ deleteStatus: {bookResponse, noteResponse} });
 

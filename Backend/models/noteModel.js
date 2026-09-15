@@ -41,6 +41,17 @@ export default {
             return err;
         }
     },
+    deleteAllNotes: async (bookKey, userId) => {
+        const fullKey = `/works/${bookKey}`;
+        try {
+            const response = await pool.query("DELETE FROM notes WHERE book_key = $1 AND user_id = $2 RETURNING id",
+                [fullKey, userId]
+            );
+            return response;
+        } catch (err) {
+            return err;
+        }
+    },
     updateNote: async (noteId, userId, title, note, tags) => {
         try {
             const response = await pool.query("UPDATE notes SET note = $1, title= $2, tags = $3::text[] WHERE id = $4 AND user_id = $5 RETURNING id, title, note, tags",

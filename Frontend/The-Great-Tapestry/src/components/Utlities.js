@@ -60,9 +60,33 @@ const fetchBookInfo = async (key) => {
 
     }
     catch (err) {
-        return undefined;
+        return err;
     }
 };
+
+const getBookFromLibrary = async (key) => {
+    try {
+        const response = await axios.get(`http://localhost:3000/books/utils/${key}`, {
+            withCredentials: true,
+        });
+        return response.data.book;
+    }
+    catch (err) {
+        return err;
+    }
+};
+
+const updateRating = async (key, rating) => {
+    try {
+        const response = await axios.patch(`http://localhost:3000/books/update/${key}`, {
+            rating: rating,
+        }, { withCredentials: true});
+
+        return response.data.rating;
+    } catch (err) {
+        return err;
+    }
+}
 
 const deleteBook = async (key) => {
     try {
@@ -158,6 +182,8 @@ export {
     errorMessages, 
     getUser, 
     getLibrary, 
+    getBookFromLibrary,
+    updateRating,
     logOut, 
     fetchBookInfo, 
     deleteBook, 

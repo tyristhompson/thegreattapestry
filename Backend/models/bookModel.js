@@ -59,6 +59,17 @@ export default {
             }
         }
     },
+    getBookFromLibrary: async (key, userId) => {
+        try {
+            const formattedKey = `/works/${key}`;
+            const response = await pool.query("SELECT title, book_key, cover, rating FROM library_test WHERE book_key = $1 AND user_id = $2", 
+                [formattedKey, userId]
+            );
+            return response.rows[0];
+        } catch (err) {
+            return err;
+        }
+    },
     addToLibrary: async (title, key, userID, cover, description) => {
         try {
             const response = await pool.query("INSERT INTO library_test (title, book_key, user_id, cover, description)  VALUES ($1, $2, $3, $4, $5) RETURNING title, user_id",
@@ -70,6 +81,17 @@ export default {
             console.log(err);
             const errorMessage = "error adding book to library";
             return errorMessage;
+        }
+    },
+    updateRating: async (key, userId, rating) => {
+        const formattedKey = `/works/${key}`;
+        try {
+            const response = await pool.query("UPDATE library_test SET rating = $1 WHERE book_key = $2 AND user_id = $3 RETURNING rating",
+                [rating, formattedKey, userId]
+            );
+            return response.rows[0];
+        } catch(err) {
+            return err;
         }
     },
     deleteFromLibrary: async (bookKey, userId) => {

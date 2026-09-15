@@ -1,19 +1,34 @@
 import styles from "../Notes.module.css";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { deleteBook, fetchBookInfo } from "../../Utlities";
-import Rating from "./Rating";
+import { deleteBook, getBookFromLibrary, updateRating } from "../../Utlities";
+import Rating from "./Rating/Rating";
 
 function BookUtils() {
     const bookKey = JSON.parse(localStorage.getItem("book"));
+    const [title, setTitle] = useState("");
+    const [cover, setCover] = useState("");
+    const [rating, setRating] = useState(0);
     const [bookDetails, setBookDetails] = useState({});
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetchBookInfo(bookKey).then((info) => {
+        getBookFromLibrary(bookKey).then((info) => {
             setBookDetails(info)
+            setTitle(info.title);
+            setCover(info.cover);
+            setRating(info.rating);
         });
     }, []);
+
+    async function changeRating (newRating) {
+        try {
+            const response = await updateRating(bookKey, newRating);
+            setRating(response.rating);
+        } catch (err) {
+            return err;
+        }
+    }
 
     async function removeFromLibrary() {
         try {
@@ -45,9 +60,9 @@ function BookUtils() {
                         <p className={styles.tooltip}>Remove From Library</p>
                     </button>
                 </div>
-                <img src={bookDetails?.cover ?`https://covers.openlibrary.org/b/id/${bookDetails.cover}-M.jpg` : "./images/call-me-by-your-name.jpg"} alt={bookDetails.title + " " + "book cover"} />
-                <h2>{bookDetails.title}</h2>
-                <Rating />
+                <img src={bookDetails?.cover ?`https://covers.openlibrary.org/b/id/${cover}-M.jpg` : "./images/call-me-by-your-name.jpg"} alt={bookDetails.title + " " + "book cover"} />
+                <h2>{title}</h2>
+                <Rating bookRating={rating} changeRating={(newRating) => {changeRating(newRating)}}/>
             </div>
         </>
     )
